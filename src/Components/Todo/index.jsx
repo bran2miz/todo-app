@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useForm from '../../hooks/form';
 import Header from '../Header';
 import List from '../List';

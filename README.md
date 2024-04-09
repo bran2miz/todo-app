@@ -14,6 +14,18 @@ What it looks like:
 
 ![lab 31 expected](./screen-shot1.png)
 
+### Lab 32:
+
+Phase 2 incorporates configuration settings to the application.
+
+Main Page: 
+
+![lab 32](./todo-1.png);
+
+Settings Configuration page:
+
+![lab 32](./settings.png);
+
 ## Notes: 
 
 useContext method has context is basically declaring some state at a high level
