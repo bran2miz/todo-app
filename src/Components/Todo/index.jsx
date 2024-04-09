@@ -31,21 +31,27 @@ const Todo = () => {
   }
 
   function toggleComplete(id) {
-
+    // set items to map through the list of current incomplete tasks. If I click to mark it as complete, the id will pass into the task clicked to check if matches any id in state. If it does, mark complete from false to true. 
     const items = list.map( item => {
       if ( item.id === id ) {
         item.complete = ! item.complete;
       }
       return item;
     });
+
+    // then filter that mapped data, and if one of the object's complete is true, filter it out
     const newIncomplete = items.filter(thing => !thing.complete);
+    // reset the empty array to the new array with the filtered data
     setIncomplete(newIncomplete);
+    // list will also be updated so that useEffect can listen to updated state
     setList(items);
 
   }
 
   useEffect(() => {
+    //this will trigger when dependency array's list is altered.
     let incompleteCount = list.filter(item => !item.complete);
+    // filter my data and will set the state of incomplete. Reason why we have to do this is because the function won't automatically change the state when called; need to use useEffect to re-set the state when it re-renders.
     setIncomplete(incompleteCount);
     document.title = `To Do List: ${incomplete}`;
     // linter will want 'incomplete' added to dependency array unnecessarily. 
@@ -59,6 +65,7 @@ const Todo = () => {
 
       <ToDoForm defaultValues={defaultValues} handleSubmit={handleSubmit} handleChange={handleChange} deleteItem={deleteItem}/>
 
+      {/* pass incomplete state, list state, and the toggleComplete function into List. */}
       <List incomplete={incomplete} list={list}toggleComplete={toggleComplete}/>
 
     </>

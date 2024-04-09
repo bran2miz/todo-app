@@ -8,16 +8,25 @@ import { Pagination } from '@mui/material';
 const List = ({list, toggleComplete, incomplete}) => {
     // list is a list of ALL todos, incomplete is a list of only todos that have not been done yet. 
     const {hideCompleted, displayCount} = useContext(GlobalContext);
-
+    // hideCompleted comes from App.jsx (set to false)
+    // displayCount is set to 1 so that only one task is displayed on page. 
 
     const [count, setCount] = useState(0);
 
     const [page, setPage] = useState(1);
 
+ 
+
+    // memoization is acheived through useCallback
+    // prevents unnecessary re-renders. 
+
     // declare a variable that will update when the value that it is dependent on changes and if it changes then it will re-render. 
     const listToUse = useMemo(()=> {
+        // if hideCompleted is true, return the incomplete list of items from ToDo.
         if(hideCompleted) return incomplete;
+        // otherwise if it is false, return the entire list of items.
         else return list;
+        // if any of these dependencies changes, it will recompute the value. If none of these changes, React will reuse the previously computed value of 'listToUse'.
     }, [hideCompleted, incomplete, list]);
     
     useEffect(()=> {
@@ -32,6 +41,7 @@ const List = ({list, toggleComplete, incomplete}) => {
         setPage(ePage)
     }
     
+    // only happens when you change the number of items you want to display or if the page is changed. display could change if you wanted to add another item to the todolist.
     const startIndex = useMemo(() => {
         return (page - 1) * displayCount;
       }, [displayCount, page]);
@@ -42,6 +52,9 @@ const List = ({list, toggleComplete, incomplete}) => {
 
     return (
        <>
+       {/* uses startIndex and endIndex with the slice method to render only the subset of tasks that should be displayed on the current page. */}
+       {/* will then map through those items on that page and at each item on the page, will render this component */}
+       
         {listToUse.slice(startIndex, endIndex).map(item => (
         <div key={item.id}>
           <p>{item.text}</p>
@@ -57,3 +70,7 @@ const List = ({list, toggleComplete, incomplete}) => {
 }
 
 export default List;
+
+// ie: if you are on the first page but have two items that you want to display, it will start at the index of 0 and end on the index of 2. But with slice it only will consider the first two indexes ((0,2) but really index of 0 and 1 no index of 2)... thus you will only render two items.
+
+//displayCount could change if users have the ability to customize their viewing preferences (like a filter that could fiter more items on the page. )
