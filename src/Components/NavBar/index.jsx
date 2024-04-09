@@ -1,16 +1,13 @@
-// import React from 'react';
+
 import { Link } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Typography } from '@mui/material';
 
 const NavBar = () => {
   return (
-    <nav>
-      <ul>
-        <Link to={'/'}>Home</Link>
-        <HomeIcon />
-        <Link to={'/settings'}>Settings</Link>
-        <SettingsIcon />
+    <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#00a0b2", margin: "20px auto", padding: 10, maxWidth: 3000, width: "100%" }}> {/* Added marginBottom */}
+      <ul style={{ display: "flex" }}>
+        <Typography variant="h5" gutterBottom style={{ margin: 10 }}><Link to={'/'}>Home</Link></Typography>
+        <Typography variant="h5" gutterBottom style={{ margin: 10 }}><Link to={'/settings'}>Settings</Link></Typography>
       </ul>
     </nav>
   );
