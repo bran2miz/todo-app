@@ -1,0 +1,30 @@
+[
+    {
+        "difficulty": 4,
+        "text": "Do this",
+        "assignee": "Brandon",
+        "id": "9ba6f447-f86f-4c0e-84a6-a90d7a071357",
+        "complete": false
+    },
+    {
+        "difficulty": 4,
+        "text": "Eat Spaghetti",
+        "assignee": "Desiree",
+        "id": "5cf0a0c3-3833-42ad-b9ce-70fa2c32a9d1",
+        "complete": false
+    },
+    {
+        "difficulty": 4,
+        "text": "Do Dishes",
+        "assignee": "Arnold",
+        "id": "df2da8ee-11dc-466b-81d8-881687ce9144",
+        "complete": false
+    },
+    {
+        "difficulty": 4,
+        "text": "Get Groceries",
+        "assignee": "Felix",
+        "id": "bc69f07c-3b5e-4482-8c33-e3decb8f98a7",
+        "complete": false
+    }
+]
