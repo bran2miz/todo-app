@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { GlobalContext } from '../../../App';
-import { Typography, Card } from '@mui/material';
+import { Typography, Card, Button } from '@mui/material';
 
 const Settings = () => {
     const { userSettings, displayCount, hideCompleted, sortWord, setUserSettings } = useContext(GlobalContext);
     const [formData, setFormData] = useState(null);
-
+    // when I set user settings, I will retreive the localStorage and parse the data and set the userSettings to the parsed data. 
     useEffect(() => {
         const retrieveUserSettings = localStorage.getItem('userSettings');
         
@@ -19,19 +19,27 @@ const Settings = () => {
     useEffect(() => {
         const userSettings = { displayCount, hideCompleted, sortWord };
         localStorage.setItem('userSettings', JSON.stringify(userSettings));
+        
     }, [displayCount, hideCompleted, sortWord]);
 
+    // all variables are reference to the targets in the form submission. If the input type is 'checkbox' mark it as e.target.checked. Otherwise keep it as the e.target.value.
     const handleChange = (e) => {
         e.preventDefault();
         const { name, value, type, checked } = e.target;
         const typeOfValue = type === 'checkbox' ? checked : value;
+        // use spread to set the userSettings with the e.target.name to the type of value
+        // ie Items Per Page. name = displayCount so in userSettings, displayCount will now have a value of a number(displayCount: number). 
         setUserSettings({...userSettings, [name]: typeOfValue});
+        // Used on every input when onChange happens. 
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setFormData({...userSettings, sortWord: e.target.value});
-        setUserSettings({...userSettings, sortWord: e.target.value});
+        // console.log(e.target.value);
+        const sortWordValue = userSettings.sortWord || '';
+        setFormData({displayCount, hideCompleted, sortWord: sortWordValue});
+        setUserSettings({displayCount, hideCompleted, sortWord: sortWordValue});
+        console.log("userSettings", userSettings);
     };
 
     return (
@@ -75,12 +83,13 @@ const Settings = () => {
                                     name="sortWord"
                                     value={sortWord || ''}
                                     onChange={handleChange}
+                                    placeholder='difficulty'
                                 />
                             </label>
                         </p>
                         <p>
                             <label>
-                                <button type="submit">Update Settings</button>
+                                <Button type="submit" variant="contained" color="secondary" style={{ margin: 10, padding: '10px 20px' }}>Show New Settings</Button>
                             </label>
                         </p>
                     </Card>
