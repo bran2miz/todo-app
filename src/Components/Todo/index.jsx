@@ -61,15 +61,19 @@ const Todo = () => {
 
   return (
     <>
-      <Header incomplete={incomplete} />
-
-      <ToDoForm defaultValues={defaultValues} handleSubmit={handleSubmit} handleChange={handleChange} deleteItem={deleteItem}/>
-
-      {/* pass incomplete state, list state, and the toggleComplete function into List. */}
-      <List incomplete={incomplete} list={list}toggleComplete={toggleComplete}/>
-
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Header incomplete={incomplete} />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <ToDoForm defaultValues={defaultValues} handleSubmit={handleSubmit} handleChange={handleChange} deleteItem={deleteItem}/>
+          {/* pass incomplete state, list state, and the toggleComplete function into List. */}
+          <List list={list} toggleComplete={toggleComplete} incomplete={incomplete}/>
+        </div>
+      </div>
     </>
+     
   );
-};
+  };
 
 export default Todo;

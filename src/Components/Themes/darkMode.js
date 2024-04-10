@@ -8,6 +8,9 @@ export const darkMode = createTheme({
             },
             secondary: {
                 main: "#00a0b2"
-            }
+            },
+            background: {
+                default: '#2d2d2d',
+            },
     }
 })
