@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { GlobalContext } from '../../../App';
+import { GlobalContext } from '../../App';
 import { Typography, Card, Button } from '@mui/material';
+import Auth from '../../Components/Auth';
 
 const Settings = () => {
     const { userSettings, displayCount, hideCompleted, sortWord, setUserSettings } = useContext(GlobalContext);
@@ -43,6 +44,7 @@ const Settings = () => {
     };
 
     return (
+        <Auth capability={"update"}>
         <form onSubmit={handleSubmit}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography variant='h4' gutterBottom style={{ display: "flex", background: "#263238", color: "#eceff1", margin: 30, padding: 20, alignItems: "center", maxWidth: '600px', width: "100%" }}>
@@ -112,6 +114,7 @@ const Settings = () => {
                 </div>
             </div>
         </form>
+        </Auth>
     )
 }
 

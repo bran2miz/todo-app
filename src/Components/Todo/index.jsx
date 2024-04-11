@@ -4,6 +4,7 @@ import Header from '../Header';
 import List from '../List';
 import ToDoForm from '../toDoForm';
 import dummyData from './dummyData.json';
+import Auth from '../Auth';
 
 import { v4 as uuid } from 'uuid';
 
@@ -66,9 +67,12 @@ const Todo = () => {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <Auth capability={'create'}>
           <ToDoForm defaultValues={defaultValues} handleSubmit={handleSubmit} handleChange={handleChange} deleteItem={deleteItem}/>
+          </Auth>
           {/* pass incomplete state, list state, and the toggleComplete function into List. */}
-          <List list={list} toggleComplete={toggleComplete} incomplete={incomplete}/>
+          {/* lab 33 must pass in deleteItem so that if the user is logged in, they are able to delete a task */}
+          <List list={list} toggleComplete={toggleComplete} incomplete={incomplete} deleteItem={deleteItem}/>
         </div>
       </div>
     </>
