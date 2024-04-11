@@ -36,13 +36,21 @@ const LoginProvider =(props) => {
     error: null,
   });
 
+  // if it includes the capability that is passsed into the can function in the capabilities array in my user object in state, return that capability
+  // as a user, if i 'can' do these abilities, I am able to do so.
   const can = (capability) => {
     return state?.user?.capabilities?.includes(capability);
   }
   // has to be declared before it is called when using an arrow function. Does not get hoisted up when you call unlike making it a function validateToken() {}
   const validateToken = useCallback((token) => {
+    console.log(token)
+    //token that is passed in is the jwt_token
     try {
       let validUser = jwt_decode(token);
+        console.log(validUser)
+        // validUser is the object that is decoded from the token
+        // {name: 'User', role: 'user', capabilities:"[read]", iat:1516239022} (iat is issued at time for jwt payload)
+        // set the loginState to true, with the token and the object
       setLoginState(true, token, validUser);
     }
     catch (e) {
@@ -56,11 +64,12 @@ const LoginProvider =(props) => {
     cookie.save('auth', token);
     setState({ token, loggedIn, user, error: error || null });
   };
-
+  // logout clears it out, loggedIn is false, token is null, and user object is cleared.
   const logout = () => {
     setLoginState(false, null, {});
   };
 
+  // all three variables are coming from the state for login
   const login = async (username, password) => {
     let { loggedIn, token, user } = state;
     let auth = testUsers[username];
@@ -78,6 +87,7 @@ const LoginProvider =(props) => {
   useEffect(() =>{
     // This useEffect will check if it has a username, do I have a query string that I can get a token from. 
     if (state.user.name) return;
+    // query string will parse the query string of the URL.
     const qs = new URLSearchParams(window.location.search);
     const cookieToken = cookie.load('auth');
     const token = qs.get('token') || cookieToken || null;
