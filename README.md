@@ -40,6 +40,21 @@ As a user, I want to ensure that only fellow users that are allowed to “create
 As a user, I want to ensure that only fellow users that are allowed to “update”, based on their user type, can mark To Do Items complete.
 As a user, I want to ensure that only fellow users that are allowed to “delete”, based on their user type, can delete new To Do Items.
 
+# Lab 34: 
+
+IMPORTANT: to deploy on Render:
+
+create a postgres SQL service on render
+Copy and paste url db to env value: postgres://username:password@dpg-cocmioq1hbls73cttgh0-a.oregon-postgres.render.com/bearer_auth?ssl=true
+
+(needs to have ssl=true otherwise provides SSL errors with sequelize)
+
+Connect other env variables like secret key and PORT. 
+
+Should be ready to connect to front end!
+
+[Render Site](https://bearer-auth-2-8fbj.onrender.com)
+
 ## Notes: 
 
 useContext method has context is basically declaring some state at a high level

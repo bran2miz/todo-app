@@ -2,29 +2,37 @@ import React from 'react';
 import cookie from 'react-cookies';
 import jwt_decode from 'jwt-decode';
 import {useState, useEffect, useCallback} from 'react';
+import axios from 'axios';
 
-const testUsers = {
-  Administrator: {
-    password: 'admin',
-    name: 'Administrator',
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWRtaW5pc3RyYXRvciIsInJvbGUiOiJhZG1pbiIsImNhcGFiaWxpdGllcyI6IlsnY3JlYXRlJywncmVhZCcsJ3VwZGF0ZScsJ2RlbGV0ZSddIiwiaWF0IjoxNTE2MjM5MDIyfQ.pAZXAlTmC8fPELk2xHEaP1mUhR8egg9TH5rCyqZhZkQ'
-  },
-  Editor: {
-    password: 'editor',
-    name: 'Editor',
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRWRpdG9yIiwicm9sZSI6ImVkaXRvciIsImNhcGFiaWxpdGllcyI6IlsncmVhZCcsJ3VwZGF0ZSddIiwiaWF0IjoxNTE2MjM5MDIyfQ.3aDn3e2pf_J_1rZig8wj9RiT47Ae2Lw-AM-Nw4Tmy_s'
-  },
-  Writer: {
-    password: 'writer',
-    name: 'Writer',
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiV3JpdGVyIiwicm9sZSI6IndyaXRlciIsImNhcGFiaWxpdGllcyI6IlsnY3JlYXRlJ10iLCJpYXQiOjE1MTYyMzkwMjJ9.dmKh8m18mgQCCJp2xoh73HSOWprdwID32hZsXogLZ68'
-  },
-  User: {
-    password: 'user',
-    name: 'User',
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVXNlciIsInJvbGUiOiJ1c2VyIiwiY2FwYWJpbGl0aWVzIjoiWydyZWFkJ10iLCJpYXQiOjE1MTYyMzkwMjJ9.WXYvIKLdPz_Mm0XDYSOJo298ftuBqqjTzbRvCpxa9Go'
-  },
-};
+// const testUsers = {
+//   Administrator: {
+//     password: 'admin',
+//     name: 'Administrator',
+//     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWRtaW5pc3RyYXRvciIsInJvbGUiOiJhZG1pbiIsImNhcGFiaWxpdGllcyI6IlsnY3JlYXRlJywncmVhZCcsJ3VwZGF0ZScsJ2RlbGV0ZSddIiwiaWF0IjoxNTE2MjM5MDIyfQ.pAZXAlTmC8fPELk2xHEaP1mUhR8egg9TH5rCyqZhZkQ'
+//   },
+//   Editor: {
+//     password: 'editor',
+//     name: 'Editor',
+//     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRWRpdG9yIiwicm9sZSI6ImVkaXRvciIsImNhcGFiaWxpdGllcyI6IlsncmVhZCcsJ3VwZGF0ZSddIiwiaWF0IjoxNTE2MjM5MDIyfQ.3aDn3e2pf_J_1rZig8wj9RiT47Ae2Lw-AM-Nw4Tmy_s'
+//   },
+//   Writer: {
+//     password: 'writer',
+//     name: 'Writer',
+//     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiV3JpdGVyIiwicm9sZSI6IndyaXRlciIsImNhcGFiaWxpdGllcyI6IlsnY3JlYXRlJ10iLCJpYXQiOjE1MTYyMzkwMjJ9.dmKh8m18mgQCCJp2xoh73HSOWprdwID32hZsXogLZ68'
+//   },
+//   User: {
+//     password: 'user',
+//     name: 'User',
+//     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVXNlciIsInJvbGUiOiJ1c2VyIiwiY2FwYWJpbGl0aWVzIjoiWydyZWFkJ10iLCJpYXQiOjE1MTYyMzkwMjJ9.WXYvIKLdPz_Mm0XDYSOJo298ftuBqqjTzbRvCpxa9Go'
+//   },
+// };
+
+const capabilities = {
+    "Administrator": ["create", "update", "delete"],
+    "Editor": ["create", "update"],
+    "Writer": ["create"],
+    "User": [],
+}
 
 export const LoginContext = React.createContext();
 
@@ -47,7 +55,8 @@ const LoginProvider =(props) => {
     //token that is passed in is the jwt_token
     try {
       let validUser = jwt_decode(token);
-        console.log(validUser)
+      console.log(validUser)
+        validUser.capabilities = capabilities[validUser.username];
         // validUser is the object that is decoded from the token
         // {name: 'User', role: 'user', capabilities:"[read]", iat:1516239022} (iat is issued at time for jwt payload)
         // set the loginState to true, with the token and the object
@@ -72,9 +81,22 @@ const LoginProvider =(props) => {
   // all three variables are coming from the state for login
   const login = async (username, password) => {
     let { loggedIn, token, user } = state;
-    let auth = testUsers[username];
-  
-    if (auth && auth.password === password) {
+
+    const config = {
+        baseURL: 'https://bearer-auth-2-8fbj.onrender.com',
+        // baseURL: 'http://localhost:3000',
+        url:'/signin',
+        method: 'post',
+        auth: {username, password}
+    };
+
+    const response = await axios(config);
+
+    // console.log(response);
+    const auth = response.data.user
+    // let auth = testUsers[username];
+    // const auth = {};
+    if (auth && auth.username === username) {
       try {
         validateToken(auth.token);
       } catch (e) {

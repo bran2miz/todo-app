@@ -5,7 +5,7 @@ import List from '../List';
 import ToDoForm from '../toDoForm';
 import dummyData from './dummyData.json';
 import Auth from '../Auth';
-
+import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 
 const Todo = () => {
@@ -19,14 +19,53 @@ const Todo = () => {
 
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues);
 
-  function addItem(item) {
-    item.id = uuid();
+
+  async function makeRequest(config, callback) {
+    try {
+      const response = await axios(config);
+      console.log(response);
+      // if we successfully add to the database do the the callback - in the case of add that means the callback is adding the item to the list
+      // in the case of delete it will be filtering the item out of the list
+      if (callback) callback(response.data);
+    } catch (e) {
+      // if there is an error do not change the list
+      console.error(e);
+    }
+  }
+
+  useEffect(()=> {
+    (async()=> {
+      const items = await axios.get("https://bearer-auth-2-8fbj.onrender.com/todo");
+      console.log(items.data)
+      setList(items.data);
+    })();
+    
+  }, [])
+
+  // Update these functions "ADD", "DELETE", "TOGGLE COMPLETED"
+  async function addItem(item) {
+    // item.id = uuid();
     item.complete = false;
     console.log(item);
-    setList([...list, item]);
+    // setList([...list, item]);
+    // make axios request to post the item to the server
+    const config = {
+      method: 'post',
+      baseUrl: 'https://bearer-auth-2-8fbj.onrender.com',
+      url: "https://bearer-auth-2-8fbj.onrender.com/todo",
+      data: item
+    };
+      const callBackFunction = (item) => setList([...list, item]);
+      const data = await makeRequest(config, callBackFunction);
+      
+      if(data) setList([...list,data]);
+      console.log(data);
+   
+
   }
 
   function deleteItem(id) {
+    // this will only be visible to admins
     const items = list.filter( item => item.id !== id );
     setList(items);
   }
