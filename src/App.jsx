@@ -9,13 +9,15 @@ import { darkMode } from './Components/Themes/darkMode';
 import { lightMode } from './Components/Themes/lightMode';
 
 // import Routes and Routers from react-router-dom for the nav bar
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Outlet} from 'react-router-dom';
 import  NavBar  from './Components/NavBar/index';
 
 
 
 import Todo from './Components/Todo';
-import Settings from './Components/Context/Settings/index';
+import Settings from './Context/Settings';
+import LoginContext  from './Context/JWTAuth';
+import Login from './Components/Login'
 
 export const GlobalContext = createContext(null);
 
@@ -32,7 +34,7 @@ const App = () => {
 
     const [userSettings, setUserSettings] = useState({
         displayCount: 3,
-        hideCompleted: true,
+        hideCompleted: false,
         sortWord: 'difficulty'
     });
 
@@ -43,7 +45,8 @@ const App = () => {
     }, []);
 
       return (
-        
+        <LoginContext>
+        <Login />
         <GlobalContext.Provider
           value={{
             userSettings,
@@ -62,14 +65,15 @@ const App = () => {
           <Router>
             <NavBar />
             <Routes>
+                <Route path="/" element={<Outlet />}>
                 <Route index element={<Home />}/>
                 <Route path="/settings" element={<Settings/>}/>
+                </Route>
             </Routes>
           </Router>
-          {/* <Todo /> */}
           </ThemeProvider>
         </GlobalContext.Provider>
-        
+        </LoginContext>
       );  
   }
   

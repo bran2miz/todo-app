@@ -3,9 +3,10 @@
 
 import { useContext, useMemo, useState, useEffect } from 'react';
 import { GlobalContext } from '../../App';
-import { Pagination, Card } from '@mui/material';
+import { Pagination, Card, Button } from '@mui/material';
+import Auth from '../Auth'
 
-const List = ({ list, toggleComplete, incomplete }) => {
+const List = ({ list, toggleComplete, incomplete, deleteItem }) => {
     // list is a list of ALL todos, incomplete is a list of only todos that have not been done yet. 
 
     // hideCompleted comes from App.jsx (set to false)
@@ -50,6 +51,7 @@ const List = ({ list, toggleComplete, incomplete }) => {
     }, [page, displayCount]);
 
     return (
+        <Auth>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Card variant="outlined" style={{ width: 500, margin: 50, padding: 10 }}>
         {/* uses startIndex and endIndex with the slice method to render only the subset of tasks that should be displayed on the current page. */}
@@ -59,13 +61,20 @@ const List = ({ list, toggleComplete, incomplete }) => {
                         <p>{item.text}</p>
                         <p><small>Assigned to: {item.assignee}</small></p>
                         <p><small>Difficulty: {item.difficulty}</small></p>
-                        <div onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</div>
+                        <div onClick={() => toggleComplete(item.id)}>Complete: {(item.complete?? false).toString()}</div>
+                        {/* Lab 33 brings in Auth capabilities from auth so that when the user has the capability to delete, the can delete a task */}
+                        <Auth capability="delete">
+                            <Button onClick={()=> deleteItem(item.id)}>
+                            Delete
+                            </Button>
+                        </Auth>
                         <hr />
                     </div>
                 ))}
             </Card>
             <Pagination count={count} variant="outlined" color="secondary" onChange={handlePageChange} style={{ marginBottom: 20 }}/>
         </div>
+        </Auth>
     );
 };
 
