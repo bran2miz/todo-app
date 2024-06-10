@@ -55,6 +55,12 @@ Should be ready to connect to front end!
 
 [Render Site](https://bearer-auth-2-8fbj.onrender.com)
 
+![What the site looks like](./lab-34.png)
+
+![Settings if you are authorized](./lab-34-settings.png)
+
+Make sure that onRender is working. 
+
 ## Notes: 
 
 useContext method has context is basically declaring some state at a high level
